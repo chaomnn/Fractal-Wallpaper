@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <Preference
+            android:key="set_wallpaper"
+            android:icon="@drawable/ic_stars"
+            android:title="@string/set_wallpaper"/>
+
+    <PreferenceCategory
+            android:title="@string/settings"/>
+
+    <Preference
+            android:key="change_color"
+            android:icon="@drawable/ic_color_fill"
+            android:title="@string/change_color"
+            android:summary="@string/change_color_summary"/>
+
+    <SeekBarPreference
+            android:key="red"
+            android:title="@string/red"
+            android:defaultValue="0"
+            android:max="255"
+            android:selectable="false"
+            app:isPreferenceVisible="false"
+            app:showSeekBarValue="true"/>
+
+    <SeekBarPreference
+            android:key="green"
+            android:title="@string/green"
+            android:defaultValue="0"
+            android:max="255"
+            android:selectable="false"
+            app:isPreferenceVisible="false"
+            app:showSeekBarValue="true"/>
+
+    <SeekBarPreference
+            android:key="blue"
+            android:title="@string/blue"
+            android:defaultValue="0"
+            android:max="255"
+            android:selectable="false"
+            app:isPreferenceVisible="false"
+            app:showSeekBarValue="true"/>
+
+    <SeekBarPreference
+            android:key="alpha"
+            android:title="@string/alpha"
+            android:defaultValue="100"
+            android:max="100"
+            android:selectable="false"
+            app:isPreferenceVisible="false"
+            app:showSeekBarValue="true"
+            app:min="0"/>
+
+    <SwitchPreferenceCompat
+            android:key="move_mode"
+            android:icon="@drawable/ic_rotate"
+            android:title="@string/move_mode"
+            android:summary="@string/move_mode_summary"
+            android:defaultValue="false"/>
+
+    <SwitchPreferenceCompat
+            android:key="color_switch"
+            android:icon="@drawable/ic_palette"
+            android:title="@string/color_switch"
+            android:summary="@string/color_switch_summary"
+            android:defaultValue="false"/>
+
+</PreferenceScreen>
