@@ -18,7 +18,7 @@
     <SeekBarPreference
             android:key="red"
             android:title="@string/red"
-            android:defaultValue="0"
+            android:defaultValue="255"
             android:max="255"
             android:selectable="false"
             app:isPreferenceVisible="false"
@@ -27,7 +27,7 @@
     <SeekBarPreference
             android:key="green"
             android:title="@string/green"
-            android:defaultValue="0"
+            android:defaultValue="255"
             android:max="255"
             android:selectable="false"
             app:isPreferenceVisible="false"
@@ -36,7 +36,7 @@
     <SeekBarPreference
             android:key="blue"
             android:title="@string/blue"
-            android:defaultValue="0"
+            android:defaultValue="255"
             android:max="255"
             android:selectable="false"
             app:isPreferenceVisible="false"
@@ -45,7 +45,7 @@
     <SeekBarPreference
             android:key="alpha"
             android:title="@string/alpha"
-            android:defaultValue="100"
+            android:defaultValue="0"
             android:max="100"
             android:selectable="false"
             app:isPreferenceVisible="false"
