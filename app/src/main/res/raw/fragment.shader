@@ -7,13 +7,13 @@ precision highp float;
 out vec4 outColor;
 in vec2 point;
 uniform mat4 zoomMat;
-uniform vec3 baseColor;
+uniform vec4 baseColor;
 uniform vec2 constNum;
 uniform vec4 boundedColor;
 
-vec3 getColorSin(float iter, vec3 base) {
-    iter *= 0.15;
-    return 0.5 + 0.5*cos(iter + base);
+vec4 getColorSin(float iter, vec4 base) {
+    iter *= 0.2;
+    return 0.4 + 0.5*cos(iter + base);
 }
 
 void main() {
@@ -32,7 +32,7 @@ void main() {
 
         if (sum > 16.0) {
             float fIter = float(iter) - log2(log2(float(sum))) + 4.0;
-            outColor = vec4(getColorSin(fIter, baseColor), 1);
+            outColor = getColorSin(fIter, baseColor);
             break;
         } else if (iter == LIMIT) {
             outColor = boundedColor;

@@ -1,6 +1,7 @@
 package baka.chaomian.fractalwp
 
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Handler
 import android.os.Looper
 import android.service.wallpaper.WallpaperService
@@ -9,13 +10,15 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.ViewConfiguration
 import androidx.preference.PreferenceManager
+import kotlin.math.asin
 
 class FractalWallpaperService : WallpaperService() {
 
     companion object {
         private const val moveModeKey = "move_mode"
         private const val colorModeKey = "color_switch"
-        private val colorKeys = arrayOf("red", "green", "blue", "alpha")
+        private const val boundedColorKey = "bounded_color"
+        private const val outColorKey = "out_color"
 
         private val handler = Handler(Looper.getMainLooper())
     }
@@ -36,7 +39,8 @@ class FractalWallpaperService : WallpaperService() {
             surface = GLWallpaperSurface(applicationContext, surfaceHolder, FractalRenderer(applicationContext))
             preferences.registerOnSharedPreferenceChangeListener(this)
             surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
-            surface.renderer.boundedColor = getBoundedColor()
+            surface.renderer.boundedColor = getColorArray(preferences.getInt(boundedColorKey, Color.WHITE), false)
+            surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.WHITE), true)
         }
 
         override fun onDestroy() {
@@ -62,6 +66,7 @@ class FractalWallpaperService : WallpaperService() {
                     }
                     prevEventTime = event.eventTime
                 }
+
                 MotionEvent.ACTION_UP -> if (moveModeOn) {
                     handler.postDelayed(disableMoveMode, 300L)
                 }
@@ -90,21 +95,34 @@ class FractalWallpaperService : WallpaperService() {
             }
         }
 
+        private fun getColorArray(color: Int, outColor: Boolean): FloatArray {
+            val rgba = floatArrayOf(
+                Color.red(color) / 255f,
+                Color.green(color) / 255f,
+                Color.blue(color) / 255f,
+                Color.alpha(color) / 255f
+            )
+            return if (outColor) FloatArray(rgba.size) { asin(rgba[it]) } else rgba
+        }
+
         override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
             when (key) {
                 moveModeKey ->
                     doubleTapSetting = preferences.getBoolean(moveModeKey, false)
+
                 colorModeKey ->
                     surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
-                in colorKeys ->
-                    surface.renderer.boundedColor = getBoundedColor()
-            }
-        }
 
-        private fun getBoundedColor() = FloatArray(colorKeys.size) { index ->
-            val key = colorKeys[index]
-            val isAlpha = key == "alpha"
-            preferences.getInt(key, if (isAlpha) 0 else 255) / if (isAlpha) 100f else 255f
+                boundedColorKey -> {
+                    surface.renderer.boundedColor = getColorArray(
+                        preferences.getInt(boundedColorKey, Color.WHITE), false
+                    )
+                }
+
+                outColorKey -> {
+                    surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.BLUE), true)
+                }
+            }
         }
     }
 }

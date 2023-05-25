@@ -2,15 +2,16 @@
     <string name="app_name">Fractal Wallpaper</string>
     <string name="set_wallpaper">Set wallpaper</string>
     <string name="settings">Settings</string>
-    <string name="change_color">Change bounded color</string>
-    <string name="change_color_summary">Set RGBA color of the bounded area</string>
-    <string name="red">Red</string>
-    <string name="green">Green</string>
-    <string name="blue">Blue</string>
-    <string name="alpha">Alpha</string>
+    <string name="bounded_color">Change bounded color</string>
+    <string name="bounded_color_summary">Set color of the bounded area</string>
+    <string name="out_color">Change base color</string>
+    <string name="out_color_summary">Set color which will be used for coloring function</string>
     <string name="move_mode">Enable motion only after double tap</string>
     <string name="move_mode_summary">If this setting is enabled, wallpaper will move only after double-tapping. If
         disabled, it will move on any motion.</string>
     <string name="color_switch">Enable color switching on motion</string>
     <string name="color_switch_summary">If this setting is enabled, the wallpaper will switch colors on motion.</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="selected_color">Selected color: </string>
 </resources>

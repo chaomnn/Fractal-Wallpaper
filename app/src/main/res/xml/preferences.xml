@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
     <Preference
             android:key="set_wallpaper"
             android:icon="@drawable/ic_stars"
@@ -9,61 +9,32 @@
     <PreferenceCategory
             android:title="@string/settings"/>
 
-    <Preference
-            android:key="change_color"
+    <baka.chaomian.fractalwp.preference.ColorPreference
+            android:key="out_color"
+            android:icon="@drawable/ic_brush"
+            android:title="@string/out_color"
+            android:summary="@string/out_color_summary"
+            android:defaultValue="@integer/light_blue"/>
+
+    <baka.chaomian.fractalwp.preference.ColorPreference
+            android:key="bounded_color"
             android:icon="@drawable/ic_color_fill"
-            android:title="@string/change_color"
-            android:summary="@string/change_color_summary"/>
-
-    <SeekBarPreference
-            android:key="red"
-            android:title="@string/red"
-            android:defaultValue="255"
-            android:max="255"
-            android:selectable="false"
-            app:isPreferenceVisible="false"
-            app:showSeekBarValue="true"/>
-
-    <SeekBarPreference
-            android:key="green"
-            android:title="@string/green"
-            android:defaultValue="255"
-            android:max="255"
-            android:selectable="false"
-            app:isPreferenceVisible="false"
-            app:showSeekBarValue="true"/>
-
-    <SeekBarPreference
-            android:key="blue"
-            android:title="@string/blue"
-            android:defaultValue="255"
-            android:max="255"
-            android:selectable="false"
-            app:isPreferenceVisible="false"
-            app:showSeekBarValue="true"/>
-
-    <SeekBarPreference
-            android:key="alpha"
-            android:title="@string/alpha"
-            android:defaultValue="0"
-            android:max="100"
-            android:selectable="false"
-            app:isPreferenceVisible="false"
-            app:showSeekBarValue="true"
-            app:min="0"/>
+            android:title="@string/bounded_color"
+            android:summary="@string/bounded_color_summary"
+            android:defaultValue="@integer/white"/>
 
     <SwitchPreferenceCompat
             android:key="move_mode"
             android:icon="@drawable/ic_rotate"
             android:title="@string/move_mode"
             android:summary="@string/move_mode_summary"
-            android:defaultValue="false"/>
+            android:defaultValue="true"/>
 
     <SwitchPreferenceCompat
             android:key="color_switch"
             android:icon="@drawable/ic_palette"
             android:title="@string/color_switch"
             android:summary="@string/color_switch_summary"
-            android:defaultValue="false"/>
+            android:defaultValue="true"/>
 
 </PreferenceScreen>

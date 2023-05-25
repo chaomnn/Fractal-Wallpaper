@@ -6,13 +6,10 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SeekBarPreference
+import baka.chaomian.fractalwp.preference.ColorPreference
+import baka.chaomian.fractalwp.preference.ColorDialogFragment
 
 class PreferencesFragment : PreferenceFragmentCompat() {
-
-    companion object {
-        val colors = arrayOf("red", "green", "blue", "alpha")
-    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         setPreferencesFromResource(R.xml.preferences, rootKey)
@@ -25,13 +22,16 @@ class PreferencesFragment : PreferenceFragmentCompat() {
             startActivity(intent)
             true
         }
-        findPreference<Preference>("change_color")?.setOnPreferenceClickListener {
-            colors.forEach { color ->
-                val preference = findPreference<SeekBarPreference>(color)
-                val visible = preference?.isVisible
-                findPreference<SeekBarPreference>(color)?.isVisible = !visible!!
-            }
-            true
+    }
+
+    override fun onDisplayPreferenceDialog(preference: Preference) {
+        if (preference is ColorPreference) {
+            val dialogFragment = ColorDialogFragment.newInstance(preference.key)
+            // TODO
+            dialogFragment.setTargetFragment(this, 0)
+            dialogFragment.show(parentFragmentManager, null)
+        } else {
+            super.onDisplayPreferenceDialog(preference)
         }
     }
 }

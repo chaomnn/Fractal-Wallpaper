@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <TextView
+            android:id="@+id/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selected_color"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"/>
+
+    <View
+            android:id="@+id/selected_color"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_toEndOf="@+id/text"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/selected_color"/>
+
+    <baka.chaomian.fractalwp.view.ColorWheelView
+            android:id="@+id/color_wheel"
+            android:layout_width="270dp"
+            android:layout_height="270dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="10dp"
+            android:layout_marginTop="35dp"
+            android:layout_centerHorizontal="true"/>
+
+    <baka.chaomian.fractalwp.view.ColorSliderView
+            android:id="@+id/color_slider"
+            android:layout_width="20dp"
+            android:layout_height="250dp"
+            android:layout_toEndOf="@id/color_wheel"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="15dp"
+            android:layout_marginTop="50dp"/>
+
+</RelativeLayout>

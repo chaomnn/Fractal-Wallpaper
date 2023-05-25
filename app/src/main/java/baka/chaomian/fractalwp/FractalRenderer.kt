@@ -13,10 +13,6 @@ import javax.microedition.khronos.opengles.GL10
 
 class FractalRenderer(private val context: Context) : Renderer {
 
-    companion object {
-        private val defaultColor = floatArrayOf(3.4f, 3.9f, 5.0f)
-    }
-
     private val vertices = floatArrayOf(
         -1.0f, -1.0f,
         -1.0f, 1.0f,
@@ -36,11 +32,11 @@ class FractalRenderer(private val context: Context) : Renderer {
     private var colorId = 0
     private var boundedColorId = 0
 
-    private var color = defaultColor
     private var glProgram = 0
+    lateinit var color : FloatArray
     var colorSwitchMode = false
-    var boundedColor  = floatArrayOf(0f, 0f, 0f, 100f)
-    var juliaConstants = floatArrayOf(0.273f, 0.005f)
+    var boundedColor = floatArrayOf(0f, 0f, 0f, 100f)
+    var juliaConstants = floatArrayOf(0.395f, -0.159f)
 
     private fun loadShader(type: Int, source: InputStream): Int {
         return GLES30.glCreateShader(type).also { shader ->
@@ -124,9 +120,9 @@ class FractalRenderer(private val context: Context) : Renderer {
         GLES30.glUniform4fv(boundedColorId, 1, boundedColor, 0)
         GLES30.glUniform2fv(cId, 1, juliaConstants, 0)
         if (colorSwitchMode) {
-            color = FloatArray(color.size) { color[it] + 0.05f }
+            color = FloatArray(color.size) { color[it] + 0.025f }
         }
-        GLES30.glUniform3fv(colorId, 1, color, 0)
+        GLES30.glUniform4fv(colorId, 1, color, 0)
 
         // Draw
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT)
