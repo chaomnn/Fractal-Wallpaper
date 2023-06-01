@@ -6,6 +6,11 @@
             android:icon="@drawable/ic_stars"
             android:title="@string/set_wallpaper"/>
 
+    <Preference
+            android:key="current_constant"
+            android:icon="@drawable/ic_function"
+            android:title="@string/current_constant"/>
+
     <PreferenceCategory
             android:title="@string/settings"/>
 
@@ -32,9 +37,15 @@
 
     <SwitchPreferenceCompat
             android:key="color_switch"
-            android:icon="@drawable/ic_palette"
+            android:icon="@drawable/ic_line"
             android:title="@string/color_switch"
             android:summary="@string/color_switch_summary"
+            android:defaultValue="true"/>
+
+    <SwitchPreferenceCompat
+            android:key="coloring_method"
+            android:icon="@drawable/ic_palette"
+            android:title="@string/logarithmic_coloring"
             android:defaultValue="true"/>
 
 </PreferenceScreen>

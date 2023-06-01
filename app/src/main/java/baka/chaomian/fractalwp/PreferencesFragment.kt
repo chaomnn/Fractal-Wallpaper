@@ -24,6 +24,21 @@ class PreferencesFragment : PreferenceFragmentCompat() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        val preference = findPreference<Preference>("current_constant")!!
+        val constant = preferenceManager.sharedPreferences!!.getString(preference.key, "")!!
+        val text = if (constant.isEmpty()) constant else StringBuilder(constant).apply {
+            if (this.contains("+")) {
+                insert(this.indexOf("+") + 1, " ")
+            } else if (this.contains("-") && this.indexOf("-") > 0) {
+                val index = this.indexOf("-")
+                insert(index + 1, " ")
+            }
+        }.toString()
+        preference.summary = text
+    }
+
     override fun onDisplayPreferenceDialog(preference: Preference) {
         if (preference is ColorPreference) {
             val dialogFragment = ColorDialogFragment.newInstance(preference.key)

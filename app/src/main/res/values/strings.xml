@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Fractal Wallpaper</string>
     <string name="set_wallpaper">Set wallpaper</string>
+    <string name="current_constant">Current Julia set constant: </string>
     <string name="settings">Settings</string>
     <string name="bounded_color">Change bounded color</string>
     <string name="bounded_color_summary">Set color of the bounded area</string>
@@ -11,6 +12,7 @@
         disabled, it will move on any motion.</string>
     <string name="color_switch">Enable color switching on motion</string>
     <string name="color_switch_summary">If this setting is enabled, the wallpaper will switch colors on motion.</string>
+    <string name="logarithmic_coloring">Use logarithmic coloring</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="selected_color">Selected color: </string>

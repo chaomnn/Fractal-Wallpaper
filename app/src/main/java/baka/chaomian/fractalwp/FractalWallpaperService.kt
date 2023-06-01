@@ -19,6 +19,8 @@ class FractalWallpaperService : WallpaperService() {
         private const val colorModeKey = "color_switch"
         private const val boundedColorKey = "bounded_color"
         private const val outColorKey = "out_color"
+        private const val constKey = "current_constant"
+        private const val coloringMethodKey = "coloring_method"
 
         private val handler = Handler(Looper.getMainLooper())
     }
@@ -41,6 +43,7 @@ class FractalWallpaperService : WallpaperService() {
             surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
             surface.renderer.boundedColor = getColorArray(preferences.getInt(boundedColorKey, Color.WHITE), false)
             surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.WHITE), true)
+            surface.renderer.useLogColor = preferences.getBoolean(coloringMethodKey, false)
         }
 
         override fun onDestroy() {
@@ -80,8 +83,10 @@ class FractalWallpaperService : WallpaperService() {
                         (if (portrait) size.width.toFloat() / size.height else 1f)
                 val yGL = (1f - (2f * event.y) / size.height) *
                         (if (portrait) 1f else size.height.toFloat() / size.width)
-                println("xGL $xGL yGL $yGL")
                 surface.renderer.juliaConstants = floatArrayOf(xGL, yGL)
+                preferences.edit()
+                    .putString(constKey, if (yGL > 0) "${xGL} +${yGL}i" else "${xGL} ${yGL}i")
+                    .apply()
                 surface.requestRender()
             }
         }
@@ -89,6 +94,13 @@ class FractalWallpaperService : WallpaperService() {
         override fun onVisibilityChanged(visible: Boolean) {
             super.onVisibilityChanged(visible)
             if (visible) {
+                val constString = preferences.getString(constKey, "")!!
+                if (constString.isNotEmpty() && constString.contains(" ")) {
+                    val list = constString.split(" ")
+                    val y = list[1].dropLast(1)
+                    surface.renderer.juliaConstants = floatArrayOf(list[0].toFloat(),
+                        if (y.startsWith("+")) y.drop(1).toFloat() else y.toFloat())
+                }
                 surface.onResume()
             } else {
                 surface.onPause()
@@ -121,6 +133,10 @@ class FractalWallpaperService : WallpaperService() {
 
                 outColorKey -> {
                     surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.BLUE), true)
+                }
+
+                coloringMethodKey -> {
+                    surface.renderer.useLogColor = preferences.getBoolean(coloringMethodKey, false)
                 }
             }
         }
