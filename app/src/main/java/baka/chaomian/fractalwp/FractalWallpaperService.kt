@@ -17,7 +17,6 @@ class FractalWallpaperService : WallpaperService() {
     companion object {
         private const val moveModeKey = "move_mode"
         private const val colorModeKey = "color_switch"
-        private const val boundedColorKey = "bounded_color"
         private const val outColorKey = "out_color"
         private const val constKey = "current_constant"
         private const val coloringMethodKey = "coloring_method"
@@ -41,7 +40,6 @@ class FractalWallpaperService : WallpaperService() {
             surface = GLWallpaperSurface(applicationContext, surfaceHolder, FractalRenderer(applicationContext))
             preferences.registerOnSharedPreferenceChangeListener(this)
             surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
-            surface.renderer.boundedColor = getColorArray(preferences.getInt(boundedColorKey, Color.WHITE), false)
             surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.WHITE), true)
             surface.renderer.useLogColor = preferences.getBoolean(coloringMethodKey, false)
         }
@@ -124,12 +122,6 @@ class FractalWallpaperService : WallpaperService() {
 
                 colorModeKey ->
                     surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
-
-                boundedColorKey -> {
-                    surface.renderer.boundedColor = getColorArray(
-                        preferences.getInt(boundedColorKey, Color.WHITE), false
-                    )
-                }
 
                 outColorKey -> {
                     surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.BLUE), true)

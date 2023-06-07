@@ -21,13 +21,6 @@
             android:summary="@string/out_color_summary"
             android:defaultValue="@integer/light_blue"/>
 
-    <baka.chaomian.fractalwp.preference.ColorPreference
-            android:key="bounded_color"
-            android:icon="@drawable/ic_color_fill"
-            android:title="@string/bounded_color"
-            android:summary="@string/bounded_color_summary"
-            android:defaultValue="@integer/white"/>
-
     <SwitchPreferenceCompat
             android:key="move_mode"
             android:icon="@drawable/ic_rotate"
