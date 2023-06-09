@@ -7,6 +7,7 @@ import android.os.Looper
 import android.service.wallpaper.WallpaperService
 import android.util.Size
 import android.view.MotionEvent
+import android.view.ScaleGestureDetector
 import android.view.SurfaceHolder
 import android.view.ViewConfiguration
 import androidx.preference.PreferenceManager
@@ -20,6 +21,9 @@ class FractalWallpaperService : WallpaperService() {
         private const val outColorKey = "out_color"
         private const val constKey = "current_constant"
         private const val coloringMethodKey = "coloring_method"
+        private const val scaleFactorKey = "scaleFactor"
+
+        private const val scaleRatio = 0.02f
 
         private val handler = Handler(Looper.getMainLooper())
     }
@@ -35,13 +39,31 @@ class FractalWallpaperService : WallpaperService() {
         private val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
         private var doubleTapSetting = preferences.getBoolean(moveModeKey, false)
 
+        private var scaleFactor = 1f
+        private var zoomModeOn = false
+        private val scaleDetector: ScaleGestureDetector = ScaleGestureDetector(applicationContext,
+            object: ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                override fun onScale(detector: ScaleGestureDetector): Boolean {
+                    if (moveModeOn) {
+                        return false
+                    }
+                    scaleFactor += if (detector.scaleFactor < 1f) scaleRatio else -scaleRatio
+                    scaleFactor = scaleFactor.coerceIn(0.3f, 2.5f)
+                    surface.renderer.scaleFactor = scaleFactor
+                    preferences.edit().putFloat(scaleFactorKey, scaleFactor).apply()
+                    surface.requestRender()
+                    return super.onScale(detector)
+                }
+            })
+
         override fun onCreate(surfaceHolder: SurfaceHolder) {
             super.onCreate(surfaceHolder)
             surface = GLWallpaperSurface(applicationContext, surfaceHolder, FractalRenderer(applicationContext))
             preferences.registerOnSharedPreferenceChangeListener(this)
             surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
-            surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.WHITE), true)
+            surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.WHITE))
             surface.renderer.useLogColor = preferences.getBoolean(coloringMethodKey, false)
+            surface.renderer.scaleFactor = preferences.getFloat(scaleFactorKey, 1f)
         }
 
         override fun onDestroy() {
@@ -54,10 +76,21 @@ class FractalWallpaperService : WallpaperService() {
         }
 
         private val disableMoveMode = Runnable { moveModeOn = false }
+        private val disableZoomMode = Runnable { zoomModeOn = false }
 
         override fun onTouchEvent(event: MotionEvent) {
+            scaleDetector.onTouchEvent(event)
             super.onTouchEvent(event)
             when (event.action) {
+                MotionEvent.ACTION_POINTER_DOWN -> {
+                    handler.removeCallbacks(disableZoomMode)
+                    zoomModeOn = true
+                }
+
+                MotionEvent.ACTION_POINTER_UP -> {
+                    handler.postDelayed(disableZoomMode, 300L)
+                }
+
                 MotionEvent.ACTION_DOWN -> if (doubleTapSetting) {
                     if (prevEventTime != 0L &&
                         event.eventTime - prevEventTime < ViewConfiguration.getDoubleTapTimeout()
@@ -72,15 +105,15 @@ class FractalWallpaperService : WallpaperService() {
                     handler.postDelayed(disableMoveMode, 300L)
                 }
             }
-            if (doubleTapSetting && !moveModeOn) {
+            if ((doubleTapSetting && !moveModeOn) || zoomModeOn) {
                 return
             }
             if (size.width > 0 && size.height > 0) {
                 val portrait = size.width < size.height
                 val xGL = ((2f * event.x / size.width) - 1f) *
-                        (if (portrait) size.width.toFloat() / size.height else 1f)
+                        (if (portrait) size.width.toFloat() / size.height else 1f) * scaleFactor
                 val yGL = (1f - (2f * event.y) / size.height) *
-                        (if (portrait) 1f else size.height.toFloat() / size.width)
+                        (if (portrait) 1f else size.height.toFloat() / size.width) * scaleFactor
                 surface.renderer.juliaConstants = floatArrayOf(xGL, yGL)
                 preferences.edit()
                     .putString(constKey, if (yGL > 0) "${xGL} +${yGL}i" else "${xGL} ${yGL}i")
@@ -105,14 +138,14 @@ class FractalWallpaperService : WallpaperService() {
             }
         }
 
-        private fun getColorArray(color: Int, outColor: Boolean): FloatArray {
+        private fun getColorArray(color: Int): FloatArray {
             val rgba = floatArrayOf(
                 Color.red(color) / 255f,
                 Color.green(color) / 255f,
                 Color.blue(color) / 255f,
                 Color.alpha(color) / 255f
             )
-            return if (outColor) FloatArray(rgba.size) { asin(rgba[it]) } else rgba
+            return FloatArray(rgba.size) { asin(rgba[it]) }
         }
 
         override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
@@ -124,7 +157,7 @@ class FractalWallpaperService : WallpaperService() {
                     surface.renderer.colorSwitchMode = preferences.getBoolean(colorModeKey, false)
 
                 outColorKey -> {
-                    surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.BLUE), true)
+                    surface.renderer.color = getColorArray(preferences.getInt(outColorKey, Color.BLUE))
                 }
 
                 coloringMethodKey -> {

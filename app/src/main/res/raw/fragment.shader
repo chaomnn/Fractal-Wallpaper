@@ -52,7 +52,7 @@ void main() {
             }
         } else {
             // inner
-            fIter = (float(iter) + (log(THRESHOLD) - log(lastDist)) / (log(dist) - log(lastDist)));
+            fIter = (float(iter) + (logT - log(lastDist)) / (log(dist) - log(lastDist)));
             outColor = getColor(fIter, baseColor);
             break;
         }

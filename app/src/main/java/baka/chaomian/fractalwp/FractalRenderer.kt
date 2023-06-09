@@ -32,11 +32,14 @@ class FractalRenderer(private val context: Context) : Renderer {
     private var colorId = 0
     private var useLogColorId = 0
 
+    private var width = 0
+    private var height = 0
     private var glProgram = 0
     lateinit var color : FloatArray
     var colorSwitchMode = false
     var useLogColor = false
     var juliaConstants = floatArrayOf(0.395f, -0.159f)
+    var scaleFactor = 1f
 
     private fun loadShader(type: Int, source: InputStream): Int {
         return GLES30.glCreateShader(type).also { shader ->
@@ -100,6 +103,8 @@ class FractalRenderer(private val context: Context) : Renderer {
 
     override fun onSurfaceChanged(unused: GL10?, width: Int, height: Int) {
         GLES30.glViewport(0, 0, width, height)
+        this.width = width
+        this.height = height
 
         // Transformation matrix
         val portrait = width < height
@@ -109,13 +114,25 @@ class FractalRenderer(private val context: Context) : Renderer {
             if (portrait) 1f else width.toFloat() / height,
             1f
         )
-        val scaleFactor = if (portrait) height.toFloat() / width else width.toFloat() / height
+        val scaleFactor = if (portrait) {
+            (height.toFloat() / width) * scaleFactor
+        } else {
+            (width.toFloat() / height) * scaleFactor
+        }
         Matrix.scaleM(zoomMatrix, 0, identityMatrix, 0, scaleFactor, scaleFactor, 1f)
     }
 
     override fun onDrawFrame(unused: GL10?) {
         // Set matrices and color
         GLES30.glUniformMatrix4fv(transformMatrixId, 1, false, transformationMatrix, 0)
+        if (scaleFactor != 1f) {
+            val scaleFactor = if (width < height) {
+                (height.toFloat() / width) * scaleFactor
+            } else {
+                (width.toFloat() / height) * scaleFactor
+            }
+            Matrix.scaleM(zoomMatrix, 0, identityMatrix, 0, scaleFactor, scaleFactor, 1f)
+        }
         GLES30.glUniformMatrix4fv(zoomMatrixId, 1, false, zoomMatrix, 0)
         GLES30.glUniform2fv(cId, 1, juliaConstants, 0)
         GLES30.glUniform1i(useLogColorId, if (useLogColor) 1 else 0)
