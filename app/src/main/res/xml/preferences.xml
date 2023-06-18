@@ -41,4 +41,13 @@
             android:title="@string/logarithmic_coloring"
             android:defaultValue="true"/>
 
+    <DropDownPreference
+            android:key="iteration_count"
+            android:icon="@drawable/ic_iteration"
+            android:title="@string/iteration_count"
+            android:summary="@string/iteration_count_summary"
+            android:entries="@array/iteration_values"
+            android:entryValues="@array/iteration_values"
+            android:defaultValue="500"/>
+
 </PreferenceScreen>

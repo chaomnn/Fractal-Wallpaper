@@ -11,6 +11,9 @@
     <string name="color_switch">Enable color switching on motion</string>
     <string name="color_switch_summary">If this setting is enabled, the wallpaper will switch colors on motion.</string>
     <string name="logarithmic_coloring">Use logarithmic coloring</string>
+    <string name="iteration_count">Change iteration limit</string>
+    <string name="iteration_count_summary">Warning: raising the iteration limit may drastically slow
+        down performance</string>
     <string name="dialog_ok">OK</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="selected_color">Selected color: </string>

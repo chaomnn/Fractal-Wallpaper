@@ -22,6 +22,7 @@ class FractalWallpaperService : WallpaperService() {
         private const val constKey = "current_constant"
         private const val coloringMethodKey = "coloring_method"
         private const val scaleFactorKey = "scaleFactor"
+        private const val iterationCountKey = "iteration_count"
 
         private const val scaleRatio = 0.02f
 
@@ -162,6 +163,10 @@ class FractalWallpaperService : WallpaperService() {
 
                 coloringMethodKey -> {
                     surface.renderer.useLogColor = preferences.getBoolean(coloringMethodKey, false)
+                }
+
+                iterationCountKey -> {
+                    surface.renderer.iterationLimit = Integer.parseInt(preferences.getString(iterationCountKey, "500")!!)
                 }
             }
         }

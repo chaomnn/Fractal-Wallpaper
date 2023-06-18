@@ -1,6 +1,5 @@
 #version 300 es
 
-#define LIMIT 500
 #define THRESHOLD 0.000001
 
 precision highp float;
@@ -11,6 +10,7 @@ uniform mat4 zoomMat;
 uniform vec4 baseColor;
 uniform vec2 constNum;
 uniform bool useLogColor;
+uniform int limit;
 
 vec4 getColor(float iter, vec4 base) {
     iter = useLogColor ? log2(iter) : iter * 0.2;
@@ -26,7 +26,7 @@ void main() {
     float lastDist = 0.0;
     float logT = log(THRESHOLD);
 
-    while (iter <= LIMIT) {
+    while (iter <= limit) {
 
         float temp = zn.x;
         next.x = (zn.x - zn.y) * (zn.x + zn.y) + c.x;
@@ -46,8 +46,8 @@ void main() {
         float dist = dot(diff, diff);
         if (dist >= THRESHOLD) {
             lastDist = dist;
-            if (iter == LIMIT) {
-                outColor = getColor(float(LIMIT), baseColor);
+            if (iter == limit) {
+                outColor = getColor(float(limit), baseColor);
                 break;
             }
         } else {

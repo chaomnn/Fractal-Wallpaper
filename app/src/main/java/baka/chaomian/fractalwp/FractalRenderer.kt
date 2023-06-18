@@ -31,15 +31,19 @@ class FractalRenderer(private val context: Context) : Renderer {
     private var cId = 0
     private var colorId = 0
     private var useLogColorId = 0
+    private var iterationLimitId = 0
 
     private var width = 0
     private var height = 0
     private var glProgram = 0
+
+    // User settings
     lateinit var color : FloatArray
     var colorSwitchMode = false
     var useLogColor = false
     var juliaConstants = floatArrayOf(0.395f, -0.159f)
     var scaleFactor = 1f
+    var iterationLimit = 500
 
     private fun loadShader(type: Int, source: InputStream): Int {
         return GLES30.glCreateShader(type).also { shader ->
@@ -88,6 +92,7 @@ class FractalRenderer(private val context: Context) : Renderer {
         zoomMatrixId = GLES30.glGetUniformLocation(glProgram, "zoomMat")
         colorId = GLES30.glGetUniformLocation(glProgram, "baseColor")
         useLogColorId = GLES30.glGetUniformLocation(glProgram, "useLogColor")
+        iterationLimitId = GLES30.glGetUniformLocation(glProgram, "limit")
 
         // Clear color
         GLES30.glClearColor(0f, 0f, 0f, 1f)
@@ -136,6 +141,7 @@ class FractalRenderer(private val context: Context) : Renderer {
         GLES30.glUniformMatrix4fv(zoomMatrixId, 1, false, zoomMatrix, 0)
         GLES30.glUniform2fv(cId, 1, juliaConstants, 0)
         GLES30.glUniform1i(useLogColorId, if (useLogColor) 1 else 0)
+        GLES30.glUniform1i(iterationLimitId, iterationLimit)
         if (colorSwitchMode) {
             color = FloatArray(color.size) { color[it] + 0.025f }
         }
